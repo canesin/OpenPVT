@@ -96,5 +96,4 @@ REAL PNRB(REAL guess, const REAL (*func)(const REAL&))
 }
 
 } /* openprop */
-
 #endif /* end of include guard: UTILS_H */
