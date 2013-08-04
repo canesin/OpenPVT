@@ -6,100 +6,104 @@
 #define R134A_H
 
 #include "../utils/utils.h"
+#include "base.h"
 
+typedef struct fluid fluid
 namespace openprop
 {
-//Force definition of fluid as R134a - add basic testing in upper-level to verify
-//if fluid calculated is the same of the fluid asking for calculations
+	//Thermal conductivity constants: G. Scalabrin et al. / Fluid Phase Equilibria 245 (2006) 37–51
 
-	struct fluid
-	{
-		REAL Tc; //Kelvin - critical temperature
-		REAL pc; //MPa - critical pressure
-		REAL rhoc; //kgm-3 - critical density
-		REAL Tt; //Kelvin - triple temperature
-		REAL M; //kg mol-1 - molecular mass
-
-		//Saturation pressure
-		REAL p_sat(REAL T){
-			REAL t = T/fluid.Tc; //Reduced temperature
-			return fluid.pc * exp((1/t)*(
-				-7.628631*pow(1-t,1) + \
-				1.734314*pow(1-t,1.5) + \
-				−2.591127*pow(1-t,2.5) + \
-				−3.290324*pow(1-t,5)
-				));
-		}
-
-		//Saturated gas density
-		REAL rhog_sat(REAL T){
-			REAL t = T/fluid.Tc; //Reduced temperature
-			return fluid.pc * exp((1/t)*(
-				-7.628631*pow(1-t,1) + \
-				1.734314*pow(1-t,1.5) + \
-				−2.591127*pow(1-t,2.5) + \
-				−3.290324*pow(1-t,5)
-				));
-		}
-
-		//Saturated liquid density
-		REAL rhol_sat(REAL T){
-			REAL t = T/fluid.Tc; //Reduced temperature
-			return fluid.pc * ((1/t)*(
-				1.8689487*pow(1-t,1/3) + \
-				0.6531694*pow(1-t,2/3) + \
-				0.22950915*pow(1-t,1) + \
-				0.7436063*pow(1-t,5)
-				)+1);
-		}
-	}
-
-	struct fluid
-	{
-		REAL Tc = 374.083; //Kelvin - critical temperature
-		REAL pc = 4.048; //MPa - critical pressure
-		REAL rhoc = 509; //kgm-3 - critical density
-		REAL Tt = 169.85; //Kelvin - triple temperature
-		REAL M = 0.102031; //kg mol-1 - molecular mass
-
-		//A fundamental equation of state for 1,1,1,2-tetrafluoroethane with an intermolecular
-		//potential energy background and reliable ideal-gas properties
-		//I Made Astina, Haruki Sato
-		//Fluid Phase Equilibria 221 (2004) 103–111
-
-		//Saturation pressure
-		REAL p_sat(REAL T){
-			REAL t = T/fluid.Tc; //Reduced temperature
-			return fluid.pc * exp((1/t)*(
-				-7.628631*pow(1-t,1) + \
-				1.734314*pow(1-t,1.5) + \
-				−2.591127*pow(1-t,2.5) + \
-				−3.290324*pow(1-t,5)
-				));
-		}
-
-		//Saturated gas density
-		REAL rhog_sat(REAL T){
-			REAL t = T/fluid.Tc; //Reduced temperature
-			return fluid.pc * exp((1/t)*(
-				-7.628631*pow(1-t,1) + \
-				1.734314*pow(1-t,1.5) + \
-				−2.591127*pow(1-t,2.5) + \
-				−3.290324*pow(1-t,5)
-				));
-		}
-
-		//Saturated liquid density
-		REAL rhol_sat(REAL T){
-			REAL t = T/fluid.Tc; //Reduced temperature
-			return fluid.pc * ((1/t)*(
-				1.8689487*pow(1-t,1/3) + \
-				0.6531694*pow(1-t,2/3) + \
-				0.22950915*pow(1-t,1) + \
-				0.7436063*pow(1-t,5)
-				)+1);
-		}
-	}
-
+	fluid R134a = {
+		.T_max = 560,
+		.T_min = 180,
+		.P_max = 80000,
+		.MW = 102.032,
+		.Tb = 247.076,
+		.Tc = 374.274,
+		.Pc = 4065,
+		.Vc = 0.00194,
+		.rhoc = 515.25,
+		.R = 8.314472,
+		.omega = 0.32684,
+		.sigma = 0.468932,
+		.mu = 6.87,
+		.Tt = 169.85,
+		.h0 = 295.57,
+		.s0 = -0.2037,
+		.SE1 = 3.46821920e-1,
+		.SE2 = 5.03423025e-1,
+		.SE3 = -3.51059570e-1,
+		.SE4 = 5.07004866e-2,
+		.SE5 = 1.99939129e-4,
+		.SE6 = -5.69888763e-1,
+		.SE7 = -1.96198912e-1,
+		.SE8 = -2.02509554,
+		.SE9 = -1.09353609,
+		.SE10 = 7.25785202e-2,
+		.SE11 = 2.16072642e-1,
+		.SE12 = -1.01542630e-1,
+		.SE13 = 7.46926106e-2,
+		.SE14 = 2.18830463e-3,
+		.a_0 = 1.07271e-4,
+		.a_1 = -4.41655e-5,
+		.a_2 = 0,
+		.b_0 = 1.66457e-4,
+		.b_1 = -4.80293e-5,
+		.b_2 = 0,
+		.c_0 = 8.08333e-5,
+		.c_1 = -4.90360e-5,
+		.c_2 = 0,
+		.d_0 = 0.0312515,
+		.d_1 = -0.0896122,
+		.d_2 = 0.0730823,
+		.d_3 = 0,
+		.A_0 = -2.12476e-8,
+		.A_1 = 2.81647e-9,
+		.A_2 = 0,
+		.B_0 = 1.35594e-8,
+		.B_1 = 0,
+		.B_2 = 3.17550e-10,
+		.C_0 = 0,
+		.C_1 = 4.81769e-7,
+		.C_2 = -1.17149e-7,
+		.k_c = 2.0547e-3,
+		.g_1 = 0.0,
+		.g_2 = 0.5,
+		.g_3 = 1.0,
+		.g_4 = 1.5,
+		.g_5 = 4.0,
+		.g_6 = 5.5,
+		.g_7 = 6.0,
+		.g_8 = 0.0,
+		.h_1 = 1.0,
+		.h_2 = 1.0,
+		.h_3 = 6.0,
+		.h_4 = 0.0,
+		.h_5 = 3.0,
+		.h_6 = 0.0,
+		.h_7 = 0.0,
+		.h_8 = 1.0,
+		.n_1 = 23.504800,
+		.n_2 = -15.261689,
+		.n_3 = 0.064403724,
+		.n_4 = 7.9735850,
+		.n_5 = 0.28675949,
+		.n_6 = 8.1819842,
+		.n_7 = -6.4852285,
+		.n_8 = -4.8298888,
+		.n_c = 1.2478242,
+		.ac_1 = 1.0,
+		.ac_2 = 0.0,
+		.ac_3 = 0.0,
+		.ac_4 = 0.30,
+		.ac_5 = 0.30,
+		.ac_6 = 0.36525,
+		.ac_7 = 0.61221,
+		.ac_8 = 0.94930,
+		.ac_9 = 0.92162,
+		.ac_10 = 0.15,
+		.ac_11 = 0.08,
+		.ac_12 = 0.14,		
+	} /* R134a */
 } /* openprop */
 #endif /* end of include guard: R134A_H */

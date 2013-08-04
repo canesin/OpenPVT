@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include "../utils/utils.h"
+#include "base.h"
 
 namespace openprop
 {

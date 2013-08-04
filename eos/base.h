@@ -43,10 +43,10 @@ REAL Rho_guess(const fluid& F, const REAL& T, const REAL& P){
 // Maxwell relations in terms of Helmholtz free energy
 REAL a(const REAL& T, const REAL& rho)
 {
-  REAL tau = F.Tc/T;
-  REAL delta = rho/F.rhoc;
-  REAL R = F.R/F.MW;
-  return R*T*(F.a0(tau, delta) + F.ar(tau, delta));
+  const REAL tau = F.Tc/T;
+  const REAL delta = rho/F.rhoc;
+  const REAL Rf = R/F.MW;
+  return Rf*T*(F.a0(tau, delta) + F.ar(tau, delta));
 }
 
 // @return P [kPa] from T [K] and rho [g/cm3]
