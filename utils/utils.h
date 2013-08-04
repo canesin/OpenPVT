@@ -16,8 +16,9 @@ namespace openprop
 #define REAL double
 
 //Define Gas constant - J mol-1 K-1
+//NIST 2010 CODATA recommended value of R
 #ifndef R
-#define R 8.314472
+#define R 8.3144621
 #endif
 
 #ifndef PI
@@ -64,7 +65,7 @@ REAL PNRB(REAL guess, const REAL (*func)(const REAL&))
 {
 	REAL fx = (*func)(guess);
 	//Early-abort, check if guess is already root for equation
-	if (fx < 1E-12 && guess > 0.0) return guess;
+	if (fx < 1E-08 && guess > 0.0) return guess;
 	//Lower limit for real space. Searching for a non-negative root
 	REAL a = std::numeric_limits<REAL>::min();
 	//Upper limit for real space in REAL type
@@ -87,10 +88,10 @@ REAL PNRB(REAL guess, const REAL (*func)(const REAL&))
 		//Compute new value for function
 		fx = (*func)(guess);
 		//Check if guess is root for equation
-		if (fx < 1E-12 && guess > 0.0) return guess;
+		if (fx < 1E-08 && guess > 0.0) return guess;
 		//Increase interation count
 		count +=1;
-	//Limit the iterations to 101, should converge much faster (like 4~6 iters)	
+	//Limit the iterations to 101, should converge much faster (like 3~5 iters)	
 	} while(count < 101);
 	return guess;
 }

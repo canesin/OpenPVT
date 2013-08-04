@@ -16,8 +16,11 @@ namespace openprop
 //Lixin Sun, James F. Ely	
 //Universal equation of state for engineering application:
 //algorithm and application to non-polar and polar fluids
-double SunEly(const fluid& F, const double& tau, const double& delta){
-
+// @return Helmholtz free energy alpha
+REAL SunEly(const fluid& F, const REAL& T, const REAL& rho){
+  //Compute reduced state
+  REAL tau = T/F.Tc
+  REAL delta = rho/F.rhoc
   return  (F.SE1)*delta*pow(tau,1.5) + \
           (F.SE2)*delta*pow(tau,0.25) + \
           (F.SE3)*delta*pow(tau,1.25) + \
