@@ -9,6 +9,8 @@
 #include <math.h>
 #include <limits>
 #include "../utils/utils.h"
+#include "../fluids/base.h"
+
 
 namespace openprop
 {

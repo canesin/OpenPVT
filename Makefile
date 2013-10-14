@@ -1,5 +1,5 @@
 CC=clang++
-CFLAGS= -std=c++11 -stdlib=libc++ -Wall
+CFLAGS= -Weverything
 LDFLAGS= -c
 SOURCES=tests/utils.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
