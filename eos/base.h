@@ -1,18 +1,15 @@
-//  OpenPROP - Open source properties library
+//  OpenPVT - Open source properties library
 //	Fabio Cesar Canesin <fabio.canesin@gmail.com>
 //	MIT 2013 license
-//	base.h - Basic thermodynamic relations for OpenPROP
+//	base.h - Basic thermodynamic relations for OpenPVT
 
 #ifndef BASE_H
 #define BASE_H
 
 #include <math.h>
-#include <limits>
 #include "../utils/utils.h"
-#include "../fluids/base.h"
 
-
-namespace openprop
+namespace openpvt
 {
 
 // W. R. Salzman, Critical Constants of the van der Waals Gas,
@@ -29,12 +26,12 @@ REAL T_guess(const fluid& F, const REAL& P, const REAL& rho){
   //Compute reduced state
   const REAL p = P/F.pc
   const REAL delta = rho/F.rhoc
-  return  -(delta -3)*(p + 3*(delta*delta))/(8*delta + std::numeric_limits<REAL>::min())
+  return  -(delta -3)*(p + 3*(delta*delta))/(8*delta + REALSMALL*TOLDEFAULT)
 }
 // @return density from temperature, and pressure
 REAL Rho_guess(const fluid& F, const REAL& T, const REAL& P){
   //Compute reduced state
-  return  R * T/(P + std::numeric_limits<REAL>::min())
+  return  R * T/(P + REALSMALL*TOLDEFAULT)
 }
 
 // International Journal of Thermophysics, Vol. 24, No. 1, January 2003
@@ -43,7 +40,7 @@ REAL Rho_guess(const fluid& F, const REAL& T, const REAL& P){
 // I. Simultaneously Optimized Functional
 // Forms for Nonpolar and Polar Fluids
 // Maxwell relations in terms of Helmholtz free energy
-REAL a(const REAL& T, const REAL& rho)
+REAL a(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = F.Tc/T;
   const REAL delta = rho/F.rhoc;
@@ -52,7 +49,7 @@ REAL a(const REAL& T, const REAL& rho)
 }
 
 // @return P [kPa] from T [K] and rho [g/cm3]
-REAL P(const REAL& T, const REAL& rho)
+REAL P(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = F.Tc/T;
   const REAL delta = rho/F.rhoc;
@@ -60,7 +57,7 @@ REAL P(const REAL& T, const REAL& rho)
   return Rf*T*rho*(1+delta*F.ar_d(tau, delta));
 }
 
-REAL cv(const REAL& T, const REAL& rho)
+REAL cv(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = F.Tc/T;
   const REAL delta = rho/F.rhoc;
@@ -68,7 +65,7 @@ REAL cv(const REAL& T, const REAL& rho)
   return (-pow(tau,2))*Rf*(F.a0_tt(tau, delta)+F.ar_tt(tau, delta));
 }
 
-REAL h(const REAL& T, const REAL& rho)
+REAL h(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = F.Tc/T;
   const REAL delta = rho/F.rhoc;
@@ -76,7 +73,7 @@ REAL h(const REAL& T, const REAL& rho)
   return Rf*T*(tau*(F.a0_t(tau, delta)+F.ar_t(tau, delta))+1+delta*F.ar_d(tau, delta));
 }
 
-REAL s(const REAL& T, const REAL& rho)
+REAL s(const fluid& F, const REAL& T, const REAL& rho)
 {
   REAL tau = F.Tc/T;
   REAL delta = rho/F.rhoc;
@@ -84,7 +81,7 @@ REAL s(const REAL& T, const REAL& rho)
   return Rf*(tau*(F.a0_t(tau, delta)+F.ar_t(tau, delta))-(F.ar(tau, delta)+F.a0(tau, delta)));
 }
 
-REAL u(const REAL& T, const REAL& rho)
+REAL u(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = F.Tc/T;
   const REAL delta = rho/F.rhoc;
@@ -92,7 +89,7 @@ REAL u(const REAL& T, const REAL& rho)
   return Rf*T*tau*(F.a0_t(tau, delta)+F.ar_t(tau, delta));
 }
 
-REAL cp(const REAL& T, const REAL& rho)
+REAL cp(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = F.Tc/T;
   const REAL delta = rho/F.rhoc;
@@ -102,7 +99,7 @@ REAL cp(const REAL& T, const REAL& rho)
          (1+2*delta*F.ar_d(tau, delta)+pow(delta,2)*F.ar_dd(tau, delta)));
 }
 
-REAL w(const REAL& T, const REAL& rho)
+REAL w(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = F.Tc/T;
   const REAL delta = rho/F.rhoc;
@@ -112,26 +109,26 @@ REAL w(const REAL& T, const REAL& rho)
               ((pow(tau,2))*(F.a0_tt(tau, delta)+F.ar_tt(tau, delta))))),0.5);
 }
 
-REAL g(const REAL& T, const REAL& rho)
+REAL g(const fluid& F, const REAL& T, const REAL& rho)
 {
 
   return (F.a(T, rho)+F.P(T, rho)/rho);
 }
 
-REAL rho(const REAL& T, const REAL& Pressure)
+REAL rho(const fluid& F, const REAL& T, const REAL& Pressure)
 {
   auto Func = [&](const REAL& rho){ return F.P(T, rho) - Pressure;};
   auto DFunc = [&](const REAL& rho){ return (Func(rho+1e-03)-Func(rho))/1e-03;};
   return F.NRB(Func, DFunc, 1e-10, 1e+10, 1e-04);
 }
 
-REAL eta0(const REAL& T)
+REAL eta0(const fluid& F, const REAL& T)
 {
   const REAL tau = T/F.Tc;
   return (F.d_0 + F.d_1*pow(tau,0.25) + F.d_2*pow(tau,0.5) + F.d_3*pow(tau,0.75))*1e-3; //Dilute gas viscosity
 }
 
-REAL eta(const REAL& T, const REAL& rho)
+REAL eta(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL Rf = R/F.MW;
   const REAL tau = F.Tc/T;
@@ -152,14 +149,14 @@ REAL eta(const REAL& T, const REAL& rho)
   return F.eta0(T) + (k_i*pid + k_r*Dpr + k_a*pa + k_ii*pow(pid,2) + k_rr*pow(Dpr,2) + k_aa*pow(pa,2))*1e-3;
 }
 
-REAL cp0(const REAL& T)
+REAL cp0(const fluid& F, const REAL& T)
 {
   const REAL tau = F.Tc/T;
   const REAL Rf = R/F.MW;
   return Rf*(-0.629789+7.292937*pow(tau,-0.5)+5.154411*pow(tau,-0.75));
 }
 
-REAL k(const REAL& T, const REAL& rho)
+REAL k(const fluid& F, const REAL& T, const REAL& rho)
 {
   const REAL tau = T/F.Tc;
   const REAL delta = rho/F.rhoc;
@@ -167,10 +164,10 @@ REAL k(const REAL& T, const REAL& rho)
   
   if((tau>0.85) || (delta>0.85))
   {
-    REAL arc = 1 - F.ac_10*acosh(1+F.ac_11*pow(pow((1-tau),2),F.ac_12));
-    k_crit = (delta*exp((-pow(delta,F.ac_1)/F.ac_1)-pow((F.ac_2*(tau-1)),2)-pow(F.ac_3*(delta-1),2)))/ \
+    REAL arc = 1 - F.ac_10*acosh(1+F.ac_11*pow(pow((1-tau), 2), F.ac_12));
+    k_crit = (delta*exp((-pow(delta, F.ac_1)/F.ac_1)-pow((F.ac_2*(tau-1)), 2)-pow(F.ac_3*(delta-1), 2)))/ \
              pow((pow(pow((1-(1.0/tau)+F.ac_4*pow(pow((delta-1),2),(1/(2*F.ac_5)))),2),F.ac_6) + \
-             pow(F.ac_7*pow(delta-arc,2),F.ac_8)),F.ac_9);
+             pow(F.ac_7*pow(delta-arc,2), F.ac_8)), F.ac_9);
   }
 
   return F.k_c*(F.n_1*pow(tau,F.g_1)*pow(delta,F.h_1) + \
@@ -184,5 +181,5 @@ REAL k(const REAL& T, const REAL& rho)
                     F.n_c*k_crit);
 }
 
-} /* openprop */
+} /* openpvt */
 #endif /* end of include guard: BASE_H */

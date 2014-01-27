@@ -1,15 +1,13 @@
-//  OpenPROP - Open source properties library
+//  OpenPVT - Open source properties library
 //	Fabio Cesar Canesin <fabio.canesin@gmail.com>
 //	MIT 2013 license
 //	R134a.h - R134a (1,1,1,2-tetrafluoroethane) fluid file.
 #ifndef R134A_H
 #define R134A_H
 
-#include "../utils/utils.h"
 #include "base.h"
 
-typedef struct fluid fluid
-namespace openprop
+namespace openpvt
 {
 	//Thermal conductivity constants: G. Scalabrin et al. / Fluid Phase Equilibria 245 (2006) 37–51
 
@@ -105,5 +103,5 @@ namespace openprop
 		.ac_11 = 0.08,
 		.ac_12 = 0.14,		
 	} /* R134a */
-} /* openprop */
+} /* openpvt */
 #endif /* end of include guard: R134A_H */

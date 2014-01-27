@@ -1,7 +1,7 @@
-//  OpenPROP - Open source properties library
+//  OpenPVT - Open source properties library
 //	Fabio Cesar Canesin <fabio.canesin@gmail.com>
 //	MIT 2013 license
-//	eos.h - Equations of state for OpenPROP
+//	eos.h - Equations of state for OpenPVT
 
 #ifndef EOS_H
 #define EOS_H
@@ -10,7 +10,7 @@
 #include "../utils/utils.h"
 #include "base.h"
 
-namespace openprop
+namespace openpvt
 {
 
 //Fluid Phase Equilibria 222–223 (2004) 107–118
@@ -38,5 +38,5 @@ REAL SunEly(const fluid& F, const REAL& T, const REAL& rho){
           (F.SE14)*(pow(delta,2))*(pow(tau,12.5))*(exp(-(pow(delta,3))));
 }
 
-} /* openprop */
+} /* openpvt */
 #endif /* end of include guard: EOS_H */

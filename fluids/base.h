@@ -1,4 +1,4 @@
-//  OpenPROP - Open source properties library
+//  OpenPVT - Open source properties library
 //	Fabio Cesar Canesin <fabio.canesin@gmail.com>
 //	MIT 2013 license
 //	base.h - Implement default fluid struct for openprop.
@@ -6,8 +6,10 @@
 #define BASE_H
 
 #include "../utils/utils.h"
+#include "../eos/base.h"
+#include "../eos/eos.h"
 
-namespace openprop
+namespace openpvt
 {
 //Force definition of fluid as R134a - add basic testing in upper-level to verify
 //if fluid calculated is the same of the fluid asking for calculations
@@ -115,5 +117,5 @@ namespace openprop
 		const REAL ac_11;
 		const REAL ac_12;
 	} /* fluid */
-} /* openprop */
+} /* openpvt */
 #endif /* end of include guard: BASE_H */
